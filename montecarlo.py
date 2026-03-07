@@ -12,13 +12,14 @@ chik = "chik.csv"
 
 def random_dataset(denguefile, undeffile, chikfile, s):
     df = []
-    skip = sorted(random.sample(range(1, 4307513+1), 4307513-s))
-    df.append(pd.read_csv(denguefile, skiprows=skip, dtype=str))
+
+    #skip = sorted(random.sample(range(1, 4307513+1), 4307513-s))
+    #df.append(pd.read_csv(denguefile, skiprows=skip, dtype=str))
 
     skip = sorted(random.sample(range(1, 2100029+1), 2100029-s))
     df.append(pd.read_csv(undeffile, skiprows=skip, dtype=str))
 
-    #df.append(pd.read_csv(chikfile, dtype=str))
+    df.append(pd.read_csv(chikfile, dtype=str))
 
     return pd.concat(df)
 
@@ -47,7 +48,7 @@ def process_dataset(df):
     return x_train, x_test, y_train, y_test
 
 def run_classifier(classifier):
-    results_file = open(f"{classifier.__class__.__name__}dengundef_perclass.csv", "a")
+    results_file = open(f"{classifier.__class__.__name__}chikundef_perclass.csv", "a")
     #results_file.write("num, accuracy, precision, recall, f1")
 
     sample = 325_000 # undersample para classe chikungunya
@@ -71,7 +72,7 @@ def run_classifier(classifier):
     #labels = ['dengue', 'discarded/inconclusive']
     labels = [0, 1]
     prec, rec, f1, support = precision_recall_fscore_support(y_test, y_pred, labels=labels, average=None)
-    """
+    
     chik_prec = prec[0]
     chik_rec = rec[0]
     chik_f1 = f1[0]
@@ -79,14 +80,14 @@ def run_classifier(classifier):
     deng_prec = prec[0]
     deng_rec = rec[0]
     deng_f1 = f1[0]
-    
+    """
     undef_prec = prec[1]
     undef_rec = rec[1]
     undef_f1 = f1[1]
     
     # chik -> dengue -> undef
     # precisao -> recall -> f1
-    results_file.write(f"{deng_prec}, {deng_rec}, {deng_f1}, {undef_prec}, {undef_rec}, {undef_f1}\n")
+    results_file.write(f"{chik_prec}, {chik_rec}, {chik_f1}, {undef_prec}, {undef_rec}, {undef_f1}\n")
     
 
 def main():
